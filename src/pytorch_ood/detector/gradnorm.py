@@ -111,7 +111,10 @@ class GradNorm(GradientDetector):
         x = x.to(device)
 
         if _TORCH_FUNC_AVAILABLE:
-            return self._predict_batched(x)
+            try:
+                return self._predict_batched(x)
+            except Exception:
+                return self._predict_sequential(x)
         return self._predict_sequential(x)
 
     def _predict_batched(self, x: Tensor) -> Tensor:

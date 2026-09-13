@@ -54,7 +54,7 @@ class fDBD(FeaturesDetector):
 
     requires_fit = True
 
-    def __init__(self, encoder: Module, head: Linear) -> None:
+    def __init__(self, encoder: Module, head: Linear, distance_as_normalizer: bool = True) -> None:
         """
         :param encoder: model mapping inputs to penultimate-layer features
         :param head: the linear classification head of the model
@@ -62,6 +62,7 @@ class fDBD(FeaturesDetector):
         super(fDBD, self).__init__()
         self.encoder = encoder
         self.head = head
+        self.distance_as_normalizer = distance_as_normalizer
         self.train_mean: Tensor = None
         self._denom_matrix: Tensor = None
 
@@ -153,11 +154,12 @@ class fDBD(FeaturesDetector):
 
         # normalize by distance to training mean
         feat_dist = (z - train_mean).norm(dim=1)  # (N,)
-        # guard against zero-norm features
-        feat_dist = feat_dist.clamp(min=1e-8)
-
         n_classes = logits.shape[1]
-        score = boundary_sum / ((n_classes - 1) * feat_dist)
+        if self.distance_as_normalizer:
+            feat_dist = (z - train_mean).norm(dim=1).clamp(min=1e-8)
+            score = boundary_sum / ((n_classes - 1) * feat_dist)
+        else:
+            score = boundary_sum / (n_classes - 1)
 
         # negate: higher original score = more ID, convention is higher = more OOD
         return -score
