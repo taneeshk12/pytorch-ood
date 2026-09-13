@@ -121,7 +121,7 @@ trans = transforms.Compose(
 
 # %%
 benchmark = MIDOG_OpenMIBOOD(
-    root="/home/taneeshk/nas_taneeshk/dataset/",
+    root="data",
     transform=trans,
     download=True,
 )
