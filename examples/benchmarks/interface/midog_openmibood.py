@@ -121,7 +121,7 @@ trans = transforms.Compose(
 
 # %%
 benchmark = MIDOG_OpenMIBOOD(
-    root="data",
+    root="data/openmibood/midog",
     transform=trans,
     download=True,
 )
