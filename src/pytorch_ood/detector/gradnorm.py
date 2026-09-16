@@ -14,7 +14,10 @@
 
 from typing import Callable, TypeVar
 
+import logging
 import torch
+
+log = logging.getLogger(__name__)
 import torch.nn.functional as F
 from torch import Tensor
 from torch.utils.data import DataLoader
@@ -113,7 +116,8 @@ class GradNorm(GradientDetector):
         if _TORCH_FUNC_AVAILABLE:
             try:
                 return self._predict_batched(x)
-            except Exception:
+            except RuntimeError as e:
+                log.warning(f"Batched GradNorm failed ({e}). Falling back to sequential processing.")
                 return self._predict_sequential(x)
         return self._predict_sequential(x)
 

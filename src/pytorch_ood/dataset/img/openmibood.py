@@ -197,8 +197,6 @@ class KvasirSEG(OpenMIBOODDataset):
             shutil.rmtree(dest_dir)
         shutil.move(images_src, dest_dir)
         shutil.rmtree(tmp_extract, ignore_errors=True)
-        if exists(archive_path):
-            os.remove(archive_path)
 
 
 class CATARACTS(OpenMIBOODDataset):
@@ -228,9 +226,6 @@ class CATARACTS(OpenMIBOODDataset):
         with zipfile.ZipFile(archive_path, "r") as zf:
             zf.extractall(extract_parent)
 
-        if exists(archive_path):
-            os.remove(archive_path)
-
 
 class Cholec80(OpenMIBOODDataset):
     """
@@ -258,14 +253,14 @@ class Cholec80(OpenMIBOODDataset):
         with zipfile.ZipFile(archive_path, "r") as zf:
             zf.extractall(extract_parent)
 
-        if exists(archive_path):
-            os.remove(archive_path)
-
 
 class PhaKIR(OpenMIBOODDataset):
     """
-    In-distribution laparoscopic surgical phase classification dataset.
-    Restricted access via Zenodo.
+    In-distribution laparoscopic surgical instrument classification dataset (6 classes).
+    
+    .. warning::
+        Automatic download of PhaKIR is not possible because the dataset has restricted access.
+        Please request access at https://doi.org/10.5281/zenodo.16753918.
     """
 
     target_rel_dir = "Video_02"
@@ -284,7 +279,11 @@ class PhaKIR(OpenMIBOODDataset):
 class EndoVis2018(OpenMIBOODDataset):
     """
     EndoVis 2018 robotic surgery dataset (Near-OOD for PhaKIR).
-    Requires Grand Challenge login.
+    
+    .. warning::
+        Automatic download of EndoVis 2018 is not possible.
+        Please register at https://endovissub2018-roboticscenesegmentation.grand-challenge.org/
+        and download test sequences 1-4.
     """
 
     target_rel_dir = "near/Endovis2018"
@@ -307,7 +306,7 @@ class EndoVis2018(OpenMIBOODDataset):
 
 class MIDOG(OpenMIBOODDataset):
     """
-    MIDOG in-distribution mitosis dataset.
+    MIDOG in-distribution mitosis dataset (3 classes: Mitosis, Hard Negative, Non-mitosis).
     Downloads WSI slides from Figshare and extracts 50x50 TIFF patches.
 
     :see Paper: `MIDOG++ <https://doi.org/10.1038/s41597-023-02327-4>`__
@@ -477,13 +476,14 @@ class CCAgT(OpenMIBOODDataset):
                         crop.save(join(out_slide_dir, f"{ann['id']}_{cat_id}.jpg"))
 
         shutil.rmtree(tmp_output, ignore_errors=True)
-        if exists(archive_path):
-            os.remove(archive_path)
 
 
 class FNAC2019(OpenMIBOODDataset):
     """
     Fine-needle aspirate cytology (FNAC 2019) dataset (Far-OOD for MIDOG).
+    
+    .. warning::
+        Automatic download of FNAC 2019 requires manual setup due to dynamic token authentication.
     """
 
     target_rel_dir = "far/fnac2019_crops"
@@ -507,6 +507,11 @@ class CHAOS(OpenMIBOODDataset):
     """
     Combined Healthy Abdominal Organ Segmentation (CHAOS) MRI dataset (Far-OOD for OASIS-3).
     Converts DICOM slices to NIfTI volumes.
+
+    .. note::
+        Automatic conversion from DICOM to NIfTI requires the ``SimpleITK`` package. 
+        Please install it manually (``pip install SimpleITK``). If it is not installed, 
+        the raw DICOM folders will be copied without conversion.
 
     :see Zenodo: `CHAOS Test Sets <https://zenodo.org/records/3431873>`__
     """
@@ -556,8 +561,6 @@ class CHAOS(OpenMIBOODDataset):
             shutil.copytree(tmp_extract, raw_target, dirs_exist_ok=True)
 
         shutil.rmtree(tmp_extract, ignore_errors=True)
-        if exists(archive_path):
-            os.remove(archive_path)
 
 
 class Task02Heart(OpenMIBOODDataset):
@@ -592,14 +595,15 @@ class Task02Heart(OpenMIBOODDataset):
         with tarfile.open(archive_path, "r") as tf:
             tf.extractall(os.path.dirname(dest_dir))
 
-        if exists(archive_path):
-            os.remove(archive_path)
-
 
 class OASIS3(OpenMIBOODDataset):
     """
-    In-distribution brain MRI dataset from OASIS-3.
-    Requires NITRC registration and data use agreement.
+    In-distribution brain MRI dataset from OASIS-3 (3 classes: CN, MCI, AD).
+
+    .. warning::
+        Automatic download is not possible because data access requires registration.
+        Request access at https://sites.wustl.edu/oasisbrains/home/access/ and download
+        via your NITRC account.
     """
 
     target_rel_dir = "OASIS3"
@@ -637,7 +641,11 @@ class BraTS(OpenMIBOODDataset):
 class ATLAS(OpenMIBOODDataset):
     """
     ATLAS R2.0 stroke lesion MRI dataset (Near-OOD for OASIS-3).
-    Requires NITRC INDI terms agreement.
+
+    .. warning::
+        Automatic download is not possible.
+        Please agree to terms at https://fcon_1000.projects.nitrc.org/indi/retro/atlas.html
+        and submit the form to acquire the decryption key.
     """
 
     target_rel_dir = "near/ATLAS"

@@ -58,6 +58,7 @@ class fDBD(FeaturesDetector):
         """
         :param encoder: model mapping inputs to penultimate-layer features
         :param head: the linear classification head of the model
+        :param distance_as_normalizer: if True, uses the instance-wise Euclidean distance in feature space as a normalizing term for the boundary distance, mimicking fDBD. If False, computes standard decision boundary distance without scaling.
         """
         super(fDBD, self).__init__()
         self.encoder = encoder
